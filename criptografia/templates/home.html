@@ -2,10 +2,37 @@
 <html>
 <head>
    <title>{{ title }}</title>
+   {% load staticfiles %}
+   <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  
+   <meta charset="utf-8">
+   
 </head>
 <body>
-   <h1>Welcome to the CRIP FILES\'s Homepage!</h1>
-   <p>This Website was developed by {{ author }}.</p>
-   <p>Now using the Django's Template Engine.</p>
+  
+   
+      <!--<p>Este website foi desenvolvido por <strong></strong>{{ author }}</strong> utilizando a Django's Template Engine</p>-->
+
+   <header>
+      <div class="main">
+         <div class="logo">
+            <img src="logo.png">
+         </div>
+         <ul>
+            <li class="active"><a href="#">Home</a></li>
+
+         </ul>
+      </div>
+      <div class="title">
+         <h1>CripWeb</h1>
+      </div>
+      
+      <form class="button">
+         <button formaction="{% url 'encrypt' %}" class="btn">Criptografar arquivo</button>
+         <button formaction="{% url 'decrypt' %}" class="btn">Descriptografar arquivo</button>
+      </form>
+
+   </header>
 </body>
 </html>
+

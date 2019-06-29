@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.conf import settings
 from criptografia.models import Document
 from criptografia.forms import DocumentForm
+from wsgiref.util import FileWrapper
 
 #import para encrypt/decrypt
 import os
@@ -34,10 +35,7 @@ def about(request):
 	return HttpResponse(html)
 
 
-def upload(request):
-
-    #colocar nesta pagina um radio button para selecionar o modo de criptografia
-    # se rsa, outro botao de upload para a chave]
+def encrypt(request):
 
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -46,38 +44,66 @@ def upload(request):
             form.save()
             import glob
             
-            symmetic_encrypt(form.getName(),'dasdas')
-            filename = form.getName()
-            html = render_to_string('download.html', {'item': filename})
+            symmetric_encrypt(form.getName(),'dasdas')
+
+            list_of_files = glob.glob(settings.STATIC_ROOT +'/media/*') 
+            filename =  max(list_of_files, key=os.path.getctime)
+
+            if platform.system() == "Windows":
+                filename = filename[filename.rfind("\\")+1:]
+            else:
+                filename = filename[filename.rfind("/")+1:]
+            
+            html = render_to_string('download.html', {'filename': filename})
             return HttpResponse(html)
     else:
         form = DocumentForm()
-    return render(request, 'upload.html', {
-        'form': form
-    })
+    return render(request, 'upload.html', { 'form': form })
 
-def download(filename):
-    return redirect('home')
+def decrypt(request):
 
-
-'''
-def list(request):
-    # manuseia upload de arquivo
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            newdoc = Document(docfile = request.FILES['docfile'])
-            newdoc.save()
+            form.save()
+            import glob
+            
+            symmetric_decrypt(form.getName(),'dasdas')
 
-            return HttpResponseRedirect(reverse('list'))
+            list_of_files = glob.glob(settings.STATIC_ROOT +'/media/*') 
+            filename =  max(list_of_files, key=os.path.getctime)
+
+            if platform.system() == "Windows":
+                filename = filename[filename.rfind("\\")+1:]
+            else:
+                filename = filename[filename.rfind("/")+1:]
+            
+            html = render_to_string('download.html', {'filename': filename})
+            return HttpResponse(html)
     else:
         form = DocumentForm()
+    return render(request, 'upload.html', { 'form': form })
 
-    documents = Document.objects.all()
+def download(request):
+    import glob
+    
+    list_of_files = glob.glob(settings.STATIC_ROOT +'/media/*') 
+    filepath =  max(list_of_files, key=os.path.getctime)
+    
+    if platform.system() == "Windows":
+        filename = filepath[filepath.rfind("\\")+1:]
+    else:
+        filename = filepath[filepath.rfind("/")+1:]
 
-    return render(request, 'list.html', {'documents': documents, 'form': form})
-'''
-#CRIPTOGRAFIAS NAO TESTADAS VIA POST DO FORM
+    filewrapper = FileWrapper(open(filepath, 'rb'))
+    response = HttpResponse(filewrapper, content_type='text/csv')
+    response['Content-Length'] = os.path.getsize(filepath)
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+    return response
+
+
 
 #criptografia simetrica (AES)
 
@@ -88,12 +114,12 @@ def correct_filename(filename):
     else:
         return filename[filename.rfind("/")+1:]
 
-def symmetic_encrypt(filepath, key):
+def symmetric_encrypt(filepath, key):
 
     filename, file_extension = os.path.splitext(filepath)
     filename = correct_filename(filename)
   
-    if os.system("openssl enc -aes-256-cbc -salt -in media/"+ filepath +" -out media/"+ filepath +".enc -k "+ key) != 0:
+    if os.system("openssl enc -aes-256-cbc -salt -in static/media/" + filepath +" -out static/media/" + filepath +".enc -k "+ key) != 0:
         print("Encryption failed!")
         return 
     return True
@@ -102,8 +128,9 @@ def symmetric_decrypt(filepath, key):
 
     filename, file_extension = os.path.splitext(filepath)
     filename = correct_filename(filename)
-
-    if os.system("openssl enc -aes-256-cbc -d -in " + filepath +" -out " + filename +"dec.txt -k "+ key) != 0:
+    print(filepath)
+    print(filename)
+    if os.system("openssl enc -aes-256-cbc -d -in static/media/" + filepath + " -out static/media/" + filepath +".txt -k "+ key) != 0:
         print("Decryption failed!")
         return (False, "")
         

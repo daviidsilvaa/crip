@@ -1,0 +1,45 @@
+
+body, html {
+   
+   height: 100%;
+   
+   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+h1 {
+   padding: 10px;
+  
+}
+
+p {
+   
+   padding: 0 45px;
+   text-indent: 15px;
+}
+
+ .bg {
+   /* The image used */
+   background-image: url("18itl003_lightweight_2_cryptography.png");
+ 
+   /* Full height */
+   height: 100%;
+ 
+   /* Center and scale the image nicely */
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
+ }
+form {
+   text-align: center;
+
+}
+
+#rodape {
+   border: 5px solid lightblue;
+  
+   text-align: center;
+   
+   /* font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; */
+   font-size: 25px;
+   color: blue;
+}

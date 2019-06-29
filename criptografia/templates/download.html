@@ -3,17 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Download</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/download.css' %}">
 </head>
 <body>
-
-    <h1>Clique no arquivo para baixar</h1>
-
-  
     
-    Download <a href="/media/{{item}}" download>{{item}}</a>
-      
-    
+    <header>
+        <div class="main">
+                <div class="logo">
+                    <img src="logo.png">
+                </div>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                </ul>
+        </div>
 
-    <p><a href="{% url 'home' %}">Return to home</a></p>
+        <div class="title">
+                <p>Clique em Download para baixar {{filename}}</p>
+        </div>
+            
+            <form class="button">
+                <button formaction="{% url 'download' %}" class="btn">Dowload</button>
+            </form>
+    
+            
+        
+        
+    </header>
+    
 </body>
 </html>
