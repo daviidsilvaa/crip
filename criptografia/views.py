@@ -23,7 +23,7 @@ import platform
 
 # Create your views here.
 def home(request):
-	title = 'Crip Files Homepage'
+	title = 'CripWeb'
 	author = 'David e Gabriel'
 	html = render_to_string('home.html', {'title': title, 'author': author})
 	return HttpResponse(html)
