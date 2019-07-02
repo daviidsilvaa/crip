@@ -44,7 +44,7 @@ def encrypt(request):
             form.save()
             import glob
             
-            symmetric_encrypt(form.getName(),'dasdas')
+            symmetric_encrypt(form.getName(),request.POST['password'])
 
             list_of_files = glob.glob(settings.STATIC_ROOT +'/media/*') 
             filename =  max(list_of_files, key=os.path.getctime)
@@ -53,6 +53,7 @@ def encrypt(request):
                 filename = filename[filename.rfind("\\")+1:]
             else:
                 filename = filename[filename.rfind("/")+1:]
+            
             
             html = render_to_string('download.html', {'filename': filename})
             return HttpResponse(html)
@@ -69,7 +70,7 @@ def decrypt(request):
             form.save()
             import glob
             
-            symmetric_decrypt(form.getName(),'dasdas')
+            symmetric_decrypt(form.getName(),request.POST['password'])
 
             list_of_files = glob.glob(settings.STATIC_ROOT +'/media/*') 
             filename =  max(list_of_files, key=os.path.getctime)

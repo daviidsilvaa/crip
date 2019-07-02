@@ -16,9 +16,12 @@ class DocumentForm(forms.ModelForm):
         else:
             return filename[filename.rfind("/")+1:]
     
+ 
+
     docfile = forms.FileField(widget=forms.ClearableFileInput(attrs={
         'class': 'btn',
     }))
+
 
     class Meta:
         model = Document

@@ -76,6 +76,13 @@ ul li.active a{
     transform: translate(-50%,-50%);
 }
 
+.key{
+    color: white;
+    margin-bottom: 5%;
+    font-size: 18px;
+    
+}
+
 .btn{
     border: 1px solid white;
     padding: 10px 30px;

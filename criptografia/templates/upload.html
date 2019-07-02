@@ -30,9 +30,14 @@
       </div>
       
       <form method="post" enctype="multipart/form-data" class="button">
-        {% csrf_token %}
-
-        {{ form.docfile }}
+         <div class="key">
+            Senha: <input type="text" name="password" required>
+         </div>
+         {% csrf_token %}
+         
+         {{ form.docfile }}
+         
+         
         <button class="btn" type="submit">Upload</button>
       </form>
 
